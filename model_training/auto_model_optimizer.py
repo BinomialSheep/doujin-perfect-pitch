@@ -3,15 +3,16 @@ from pathlib import Path
 
 # 外部ライブラリ
 import pandas as pd
-from pycaret.classification import setup, compare_models
-from sklearn.preprocessing import LabelEncoder
+import pycaret.classification as pyc
+import sklearn.preprocessing
+import sklearn.metrics
 
 # 自作ライブラリ
 
 
-class AutoMLModelFinder:
+class AutoModelOptimizer:
     """
-    CSVデータを読み込み、pycaretを使用して最適な機械学習モデルを探索するクラス。
+    CSVデータを読み込み、pycaretを使用して最適な機械学習モデルの探索・構築をクラス。
 
     Note:
         cumlをインストールしていないので大量のWARNINGがログ出力されるが現状未対応（Dockerに移したらするかも）
@@ -26,8 +27,8 @@ class AutoMLModelFinder:
 
     def encode_label(self):
         """日本語の声優名を数字にエンコードする"""
-        encoder = LabelEncoder()
-        encoded = encoder.fit_transform(self.data[self.grouund_truth])
+        self.encoder = sklearn.preprocessing.LabelEncoder()
+        encoded = self.encoder.fit_transform(self.data[self.grouund_truth])
         self.data[self.grouund_truth] = encoded
 
     def check_data(self):
@@ -38,7 +39,7 @@ class AutoMLModelFinder:
         print(self.data.isnull().sum())
 
     def setup_model(self):
-        setup(
+        pyc.setup(
             data=self.data,
             target=self.grouund_truth,  # 正解ラベル
             data_split_shuffle=True,
@@ -49,33 +50,22 @@ class AutoMLModelFinder:
             system_log="pycratlog.log",
         )
 
-    def find_best_model(self) -> list[any]:
-        best_model = compare_models()
+    def compare_models(self) -> list[any]:
+        # models = pyc.compare_models()
         # 遅いモデルを避ける場合
-        # best_model = compare_models(exclude=["catboost", "xgboost", "gbc", "rf"])
-        return best_model
+        models = pyc.compare_models(exclude=["catboost", "xgboost", "gbc"])
+        return models
 
+    def create_model(self, best_model, save_path):
+        self.tuned_model = pyc.create_model(best_model, verbose=False)
+        pyc.save_model(self.tuned_model, save_path)
 
-def main():
-    # dataフォルダ下のcsvファイルと、正解ラベルのカラム名を指定する
-    csv_file = "mfcc_1000_noisy.csv"
-    grouund_truth = "target"
-
-    # autoMLの実行
-    ROOT_DIR = Path(__file__).resolve().parent.parent
-    CSV_DATA_PATH = f"{ROOT_DIR}/data/{csv_file}"
-    model_finder = AutoMLModelFinder()
-    model_finder.load_data(CSV_DATA_PATH, grouund_truth)
-    model_finder.encode_label()
-
-    # model_finder.check_data()
-    # exit()
-    model_finder.setup_model()
-    best_model = model_finder.find_best_model()
-
-    # 雑にいろいろ標準出力
-    print(best_model)
-
-
-if __name__ == "__main__":
-    main()
+    def generete_report(self):
+        predictions = pyc.predict_model(self.tuned_model)
+        y_true = predictions[self.grouund_truth]
+        y_pred = predictions["prediction_label"]
+        if self.encoder:
+            y_true = self.encoder.inverse_transform(y_true)
+            y_pred = self.encoder.inverse_transform(y_pred)
+        report = sklearn.metrics.classification_report(y_true, y_pred)
+        return report

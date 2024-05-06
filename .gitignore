@@ -1,6 +1,7 @@
 *.code-workspace
 *.txt
 *.db
+*.pkl
 *.sql
 *.log
 __pycache__/
