@@ -22,8 +22,18 @@ class AutoModelOptimizer:
         pass
 
     def load_data(self, data_path, grouund_truth):
-        self.data = pd.read_csv(data_path, encoding="utf-8")
         self.grouund_truth = grouund_truth
+        self.data = pd.read_csv(data_path, encoding="utf-8")
+
+        self.data = self.data.applymap(
+            lambda x: (
+                x.encode("cp932", "ignore").decode("cp932") if isinstance(x, str) else x
+            )
+        )
+        # 実験用
+        # self.data[grouund_truth] = self.data[grouund_truth].replace(
+        #     "乙倉ゅい（乙倉由依）", "乙倉ゅい(乙倉由依)"
+        # )
 
     def encode_label(self):
         """日本語の声優名を数字にエンコードする"""
@@ -42,9 +52,10 @@ class AutoModelOptimizer:
         self.clf1 = pyc.setup(
             data=self.data,
             target=self.grouund_truth,  # 正解ラベル
+            train_size=0.7,
             data_split_shuffle=True,
             use_gpu=True,
-            fold=10,
+            fold=10,  # 訓練データの分割数
             verbose=False,
             n_jobs=-1,
             system_log="pycratlog.log",
@@ -57,8 +68,27 @@ class AutoModelOptimizer:
         return models
 
     def create_model(self, best_model, save_path):
-        self.tuned_model = pyc.create_model(best_model, verbose=False)
+        pd.set_option("display.max_rows", None)
+        pd.set_option("display.max_columns", None)
+        pd.set_option("display.width", 1000)
+        self.tuned_model = pyc.create_model(best_model, verbose=True)
         pyc.save_model(self.tuned_model, save_path)
+
+    def print_report(self, report_dict):
+        """
+        f1-scoreで降順ソートしたレポートをdf形式で出力する
+        """
+        accuracy = report_dict.pop("accuracy")
+        # stats = {key: report_dict.pop(key) for key in ["accuracy"]}
+
+        df = pd.DataFrame.from_dict(report_dict, orient="index")
+        sorted_df = df.sort_values(by="f1-score", ascending=False)
+        # NOTE：average行を除くため2引く
+        speaker_count = len(df) - 2
+        data_count = df.loc["weighted avg", "support"]
+        print(f"|正解率|声優数|テストデータ件数|")
+        print(f"|{round(accuracy, 4)}|{speaker_count}|{int(data_count)}|")
+        print(sorted_df.to_string())
 
     def generete_report(self):
         predictions = pyc.predict_model(self.tuned_model)
@@ -67,8 +97,8 @@ class AutoModelOptimizer:
         if self.encoder:
             y_true = self.encoder.inverse_transform(y_true)
             y_pred = self.encoder.inverse_transform(y_pred)
-        report = sklearn.metrics.classification_report(y_true, y_pred)
-        return report
+        report = sklearn.metrics.classification_report(y_true, y_pred, output_dict=True)
+        self.print_report(report)
 
     def predict_topN(self, topN=3):
         """
@@ -123,7 +153,8 @@ class AutoModelOptimizer:
             ),
             axis=1,
         )
-        print(sklearn.metrics.classification_report(y_true, y_pred))
+        report = sklearn.metrics.classification_report(y_true, y_pred, output_dict=True)
+        self.print_report(report)
         # 確信度と正解率を0.1刻みで集計して出す
         for i in range(11):
             threshold = i / 10
@@ -135,5 +166,8 @@ class AutoModelOptimizer:
                 lambda row: row["TopN_Classes"][0],
                 axis=1,
             )
-            print(f"閾値：{threshold}, 件数：{len(y_true)}")
-            print(sklearn.metrics.classification_report(y_true, y_pred))
+            print(f"閾値：{threshold}, 件数：{len(y_true) - 2}")
+            report = sklearn.metrics.classification_report(
+                y_true, y_pred, output_dict=True
+            )
+            self.print_report(report)
