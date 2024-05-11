@@ -10,11 +10,11 @@ import auto_model_optimizer
 def main():
     """モデルの構築と保存を行う"""
     # CSVファイル名
-    CSV_FILE_NAME = "mfcc_1000_noisy.csv"
+    CSV_FILE_NAME = "mfcc_10000_mte100.csv"
     # 正解ラベルのカラム名
     GROUND_TRUTH = "target"
     # 保存するモデルのファイル名
-    SAVE_FILE_NAME = "mfcc_1000_noisy_model"
+    SAVE_FILE_NAME = "mfcc_10000_mte100_model"
     # 使用するモデル（通常、compare_modelsで最善のモデル）
     MODEL = "et"
 
@@ -23,15 +23,18 @@ def main():
     CSV_DATA_PATH = f"{ROOT_DIR}/data/{CSV_FILE_NAME}"
     SAVE_FILE_PATH = f"{ROOT_DIR}/data/{SAVE_FILE_NAME}"
     # モデル構築の実行
-    model_finder = auto_model_optimizer.AutoModelOptimizer()
-    model_finder.load_data(CSV_DATA_PATH, GROUND_TRUTH)
-    model_finder.encode_label()
-    model_finder.setup_model()
-    model_finder.create_model(MODEL, SAVE_FILE_PATH)
+    model_optimizer = auto_model_optimizer.AutoModelOptimizer()
+    model_optimizer.load_data(CSV_DATA_PATH, GROUND_TRUTH)
+    model_optimizer.encode_label()
+    model_optimizer.setup_model()
+    model_optimizer.create_model(MODEL, SAVE_FILE_PATH)
 
     # 分類レポートの出力
-    report = model_finder.generete_report()
-    print(report)
+    # report = model_optimizer.generete_report()
+    # print(report)
+
+    # topMなら正解とする場合
+    model_optimizer.generate_my_report(4)
 
 
 if __name__ == "__main__":

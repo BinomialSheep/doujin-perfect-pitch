@@ -5,4 +5,6 @@
 *.sql
 *.log
 __pycache__/
+
 catboost_info
+tmp
