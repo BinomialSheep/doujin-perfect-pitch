@@ -10,11 +10,11 @@ import auto_model_optimizer
 def main():
     """モデルの構築と保存を行う"""
     # CSVファイル名
-    CSV_FILE_NAME = "mfcc_10000_mte100.csv"
+    CSV_FILE_NAME = "mfcc_17000_mte100.csv"
     # 正解ラベルのカラム名
     GROUND_TRUTH = "target"
     # 保存するモデルのファイル名
-    SAVE_FILE_NAME = "mfcc_10000_mte100_model"
+    SAVE_FILE_NAME = "mfcc_17000_mte100_model"
     # 使用するモデル（通常、compare_modelsで最善のモデル）
     MODEL = "et"
 
@@ -31,11 +31,9 @@ def main():
 
     # 分類レポートの出力
     # report = model_optimizer.generete_report()
-    # print(report)
 
     # topMなら正解とする場合
-    model_optimizer.generate_my_report(4)
-
+    model_optimizer.generate_my_report(3)
 
 if __name__ == "__main__":
     main()
