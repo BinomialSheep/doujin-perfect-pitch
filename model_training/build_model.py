@@ -29,11 +29,13 @@ def main():
     model_optimizer.setup_model()
     model_optimizer.create_model(MODEL, SAVE_FILE_PATH)
 
+    model_optimizer.jsonify_encoder(f"{SAVE_FILE_PATH}_label_mapping.json")
+
     # 分類レポートの出力
-    # report = model_optimizer.generete_report()
+    report = model_optimizer.generete_report()
 
     # topMなら正解とする場合
-    model_optimizer.generate_my_report(3)
+    # model_optimizer.generate_my_report(3)
 
 if __name__ == "__main__":
     main()

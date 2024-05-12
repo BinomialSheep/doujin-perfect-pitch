@@ -1,5 +1,5 @@
 # 標準ライブラリ
-from pathlib import Path
+import json
 
 # 外部ライブラリ
 import pandas as pd
@@ -40,6 +40,17 @@ class AutoModelOptimizer:
         self.encoder = sklearn.preprocessing.LabelEncoder()
         encoded = self.encoder.fit_transform(self.data[self.grouund_truth])
         self.data[self.grouund_truth] = encoded
+
+    def jsonify_encoder(self, file_path):
+        """予測時に日本語の声優名が使えるように外部出力しておく"""
+        label_mapping = dict(
+            zip(self.encoder.classes_, self.encoder.transform(self.encoder.classes_))
+        )
+        # json.dumpはnumpy.int32を扱えないので標準型に直している
+        label_mapping = {str(k): int(v) for k, v in label_mapping.items()}
+
+        with open(file_path, "w", encoding="utf-8") as file:
+            json.dump(label_mapping, file, ensure_ascii=False, indent=4)
 
     def check_data(self):
         """デバッグ用"""
