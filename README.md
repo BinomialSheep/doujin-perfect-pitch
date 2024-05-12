@@ -30,7 +30,7 @@ Webスクレイピングによるデータ収集と特徴量抽出を頑張る
 - 7zip：体験版zipファイルがDeflate64で圧縮されていた場合に使用
 
 ### データ収集
-todo（自分以外の使用は想定していない）
+todo（自分以外の使用は想定していないため後回し）
 
 ### モデリング
 ```.\model_training\compare_models.py```
@@ -52,6 +52,8 @@ build_model.py内のCSV_FILE_NAME, SAVE_FILE_NAME, MODELを必要に応じて変
 
 ### 予測
 ```python ./prediction/predict.py```
+0. モデリングを行い1つ以上のモデルを構築しておく必要がある
+   1. ファイルサイズの都合上、構築済みモデルはリポジトリに置いていないため
 1. 声優を予測したい音声ファイルを./prediction/test_dataに格納する
 2. 必要であれば./prediction/predict.py内の使用するモデルを変更する
 
