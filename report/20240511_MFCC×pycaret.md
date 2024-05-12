@@ -254,19 +254,20 @@ Libsoraの当該コードはある程度読みましたが、窓関数などす�
 
 
 ## References
-[^1]：【Python】声優100人をキレイに話者識別するための機械学習レシピ(https://qiita.com/adumaru0828/items/a95de3a0fbfe54f51953)
 
-[^2]：声を聞かせるだけで声優の名前と作品が分かる 「ANIVO｜アニボ」の事前登録を開始(https://prtimes.jp/main/html/rd/p/000001179.000002302.html)
+[^1]: 【Python】声優100人をキレイに話者識別するための機械学習レシピ(https://qiita.com/adumaru0828/items/a95de3a0fbfe54f51953)
 
-[^3]：人工知能に関する断創録 メル周波数ケプストラム係数（MFCC）(https://aidiary.hatenablog.com/entry/20120225/1330179868)
+[^2]: 声を聞かせるだけで声優の名前と作品が分かる 「ANIVO｜アニボ」の事前登録を開始(https://prtimes.jp/main/html/rd/p/000001179.000002302.html)
 
-[^4]：librosa(https://libosa.org/doc/latest/index.html)
+[^3]: 人工知能に関する断創録 メル周波数ケプストラム係数（MFCC）(https://aidiary.hatenablog.com/entry/20120225/1330179868)
 
-[^5]：音源分離技術の基礎と応用～音源分離ﾁｮｯﾄﾜｶﾙになるための手引き～(https://www.docswell.com/s/d-kitamura/ZQ898R-20230624)
+[^4]: librosa(https://libosa.org/doc/latest/index.html)
 
-[^6]：Pythonで学ぶ音源分離（機械学習実践シリーズ）, 戸上真人, (https://book.impress.co.jp/books/1119101154)
+[^5]: 音源分離技術の基礎と応用～音源分離ﾁｮｯﾄﾜｶﾙになるための手引き～(https://www.docswell.com/s/d-kitamura/ZQ898R-20230624)
 
-[^7]：Deep Learning for Audio Signal Processing, CoRR, May 2019(https://arxiv.org/abs/1905.00078)
+[^6]: Pythonで学ぶ音源分離（機械学習実践シリーズ）, 戸上真人, (https://book.impress.co.jp/books/1119101154)
+
+[^7]: Deep Learning for Audio Signal Processing, CoRR, May 2019(https://arxiv.org/abs/1905.00078)
 
 ## Appendix
 ### 手法比較
