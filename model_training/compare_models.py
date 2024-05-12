@@ -13,12 +13,12 @@ def main():
     """
 
     # dataフォルダ下のcsvファイルと、正解ラベルのカラム名を指定する
-    csv_file = "mfcc_17000_mte100.csv"
+    CSV_FILE_NAME = "mfcc_17000_mte100.csv"
     grouund_truth = "target"
 
     # autoMLの実行
     ROOT_DIR = Path(__file__).resolve().parent.parent
-    CSV_DATA_PATH = f"{ROOT_DIR}/data/{csv_file}"
+    CSV_DATA_PATH = f"{ROOT_DIR}/data/{CSV_FILE_NAME}"
     model_finder = auto_model_optimizer.AutoModelOptimizer()
     model_finder.load_data(CSV_DATA_PATH, grouund_truth)
     model_finder.encode_label()

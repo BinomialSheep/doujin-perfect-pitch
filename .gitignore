@@ -8,5 +8,5 @@ __pycache__/
 
 catboost_info
 train_data
-test_data
+test_data/*
 tmp
