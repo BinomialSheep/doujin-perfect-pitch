@@ -16,7 +16,7 @@ import numpy as np
 # 自作ライブラリ
 ROOT_DIR = Path(__file__).resolve().parent.parent
 sys.path.append(str(ROOT_DIR))
-import common.VoiceProcessor as vp
+import common.voice_processor as vp
 
 
 def load_label_mapping(model_path):
