@@ -7,6 +7,6 @@
 __pycache__/
 
 catboost_info
-train_data
-test_data/*
+data/train_data/*
+prediction/test_data/*
 tmp
