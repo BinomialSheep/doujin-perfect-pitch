@@ -73,9 +73,9 @@ class AutoModelOptimizer:
         )
 
     def compare_models(self) -> list[any]:
-        # models = pyc.compare_models()
+        models = pyc.compare_models()
         # 遅いモデルを避ける場合
-        models = pyc.compare_models(exclude=["catboost", "xgboost", "gbc"])
+        # models = pyc.compare_models(exclude=["catboost", "xgboost", "gbc"])
         return models
 
     def create_model(self, best_model, save_path):
@@ -84,6 +84,10 @@ class AutoModelOptimizer:
         pd.set_option("display.width", 1000)
         self.tuned_model = pyc.create_model(best_model, verbose=True)
         pyc.save_model(self.tuned_model, save_path)
+
+    def plot_mmodel(self, plot="confusion_matrix"):
+        """FIXME: 混同行列の表示はできるけどそのあと落ちるので非推奨"""
+        pyc.plot_model(self.tuned_model, plot=plot)
 
     def print_report(self, report_dict):
         """
@@ -177,8 +181,9 @@ class AutoModelOptimizer:
                 lambda row: row["TopN_Classes"][0],
                 axis=1,
             )
-            print(f"閾値：{threshold}, 件数：{len(y_true) - 2}")
-            report = sklearn.metrics.classification_report(
-                y_true, y_pred, output_dict=True
-            )
-            self.print_report(report)
+            if len(y_true) > 0:
+                print(f"閾値：{threshold}, 件数：{len(y_true)}")
+                report = sklearn.metrics.classification_report(
+                    y_true, y_pred, output_dict=True
+                )
+                self.print_report(report)

@@ -13,7 +13,7 @@ def main():
     """
 
     # dataフォルダ下のcsvファイルと、正解ラベルのカラム名を指定する
-    CSV_FILE_NAME = "mfcc_17000_mte100.csv"
+    CSV_FILE_NAME = "mfcc_PRODUCT_SE_ON_by20sec_remove_silence_better.csv"
     grouund_truth = "target"
 
     # autoMLの実行

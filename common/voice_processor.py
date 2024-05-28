@@ -13,6 +13,7 @@ class VoiceProcessor:
         mfcc = librosa.feature.mfcc(y=self.y, sr=self.sr)  # MFCC
         mfcc = np.average(mfcc, axis=1).flatten().tolist()  # MFCC
         # 低次の係数だけ取り出す（12次まで取り出すことが多い）
+        # 0番目の係数は直流成分で、波形を表していない場合が多いので除くらしい（https://abcpedia.acoustics.jp/acoustic_feature_2.pdf）
         return mfcc[1:13]
 
     def get_duration(self):
